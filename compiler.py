@@ -13,6 +13,9 @@ def executer_fichier(nom_fichier):
     except Exception as e:
         print(f"\n❌ Erreur lors de l'exécution : {e}")
 
+    # Empêcher la fenêtre de se fermer immédiatement
+    input("\n🔎 Appuyez sur Entrée pour fermer la fenêtre...")
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         # Exécution par glisser-déposer
@@ -39,3 +42,4 @@ if __name__ == "__main__":
             executer_fichier(fichier_moncode)
         else:
             print("\nℹ️ Aucune action effectuée. Aucun fichier sélectionné.")
+            input("\n🔎 Appuyez sur Entrée pour fermer la fenêtre...")
