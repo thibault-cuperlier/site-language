@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurer le Langage</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        table { width: 50%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        button { margin-top: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Configurer le Langage</h1>
+    <button onclick="window.location.href='index.html'">Retour à l'éditeur</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mot-clé personnalisé</th>
+                <th>Équivalent Python</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <input type="text" id="customKey" placeholder="Mot-clé personnalisé">
+    <input type="text" id="pythonKey" placeholder="Équivalent Python">
+    <button onclick="ajouterMot()">Ajouter</button>
+
+    <script>
+        function chargerTraductions() {
+            return JSON.parse(localStorage.getItem("traductions")) || {};
+        }
+
+        function enregistrerTraductions(traductions) {
+            localStorage.setItem("traductions", JSON.stringify(traductions));
+        }
+
+        function afficherTable() {
+            let traductions = chargerTraductions();
+            let tbody = document.getElementById("tableBody");
+            tbody.innerHTML = "";
+
+            for (let customKey in traductions) {
+                let row = document.createElement("tr");
+
+                let td1 = document.createElement("td");
+                td1.innerText = customKey;
+                let td2 = document.createElement("td");
+                td2.innerText = traductions[customKey];
+
+                let td3 = document.createElement("td");
+                let boutonSupprimer = document.createElement("button");
+                boutonSupprimer.innerText = "Supprimer";
+                boutonSupprimer.onclick = function() {
+                    delete traductions[customKey];
+                    enregistrerTraductions(traductions);
+                    afficherTable();
+                };
+                td3.appendChild(boutonSupprimer);
+
+                row.appendChild(td1);
+                row.appendChild(td2);
+                row.appendChild(td3);
+                tbody.appendChild(row);
+            }
+        }
+
+        function ajouterMot() {
+            let customKey = document.getElementById("customKey").value.trim();
+            let pythonKey = document.getElementById("pythonKey").value.trim();
+            
+            if (customKey && pythonKey) {
+                let traductions = chargerTraductions();
+                traductions[customKey] = pythonKey;
+                enregistrerTraductions(traductions);
+                afficherTable();
+            }
+        }
+
+        window.onload = afficherTable;
+    </script>
+
+</body>
+</html>

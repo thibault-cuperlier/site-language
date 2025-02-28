@@ -1,0 +1,64 @@
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Langage</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        textarea { width: 80%; height: 200px; margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 5px; }
+        pre { background: #f4f4f4; padding: 10px; text-align: left; width: 80%; margin: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>Mon Langage de Programmation</h1>
+
+    <button onclick="window.location.href='config.html'">Configurer le langage</button>
+
+    <label for="code">Écrivez votre code :</label><br>
+    <textarea id="code" placeholder="Écrivez votre code en langage personnalisé..."></textarea><br>
+
+    <button onclick="compiler()">Compiler</button>
+
+    <h2>Code traduit en Python :</h2>
+    <pre id="output"></pre>
+
+    <script>
+        function getTraductions() {
+            return JSON.parse(localStorage.getItem("traductions")) || {
+                "si": "if",
+                "sinon": "else",
+                "tantque": "while",
+                "afficher": "print"
+            };
+        }
+
+        function compiler() {
+            let code = document.getElementById("code").value;
+            let traductions = getTraductions();
+
+            let codeTraduit = code;
+            for (let mot in traductions) {
+                let regex = new RegExp("\\b" + mot + "\\b", "g");
+                codeTraduit = codeTraduit.replace(regex, traductions[mot]);
+            }
+
+            document.getElementById("output").innerText = codeTraduit;
+
+            let blob = new Blob([codeTraduit], { type: "text/plain" });
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "programme.moncode";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+
+</body>
+</html>
